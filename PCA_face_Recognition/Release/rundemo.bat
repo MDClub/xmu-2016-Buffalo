@@ -1,0 +1,1 @@
+opencvtest.exe video\demo.mp4 img\objimg2.jpg ZhengHan 64 -1.5
