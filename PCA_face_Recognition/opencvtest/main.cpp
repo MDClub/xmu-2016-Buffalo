@@ -28,20 +28,15 @@ int main(int argc, const char** argv)
 	int facesize = 64;//检测器需要检测的最小人脸
 	float faceweight = -1.5;//SVM的分类阈值
 
-	if(argc<5)
-	{
-		facesize = atoi(argv[4]);
-		faceweight = atof(argv[5]);
-	}
 
-	if(argc<6)
-		faceweight = atof(argv[5]);//SVM的分类阈值
+	facesize = atoi(argv[4]);
+	faceweight = atof(argv[5]);//SVM的分类阈值
 
 	cout<<"输入视频:"<<argv[1]<<endl;
 	cout<<"输入图像:"<<argv[2]<<endl;
 	cout<<"目标名字:"<<argv[3]<<"(仅支持显示英文字母或数字)"<<endl;
 	cout<<"检测器需要检测的最小人脸尺寸:"<<argv[4]<<"(默认为64)"<<endl;
-	cout<<"SVM的分类阈值:"<<argv[5]<<"(默认为-1.5)"<<endl;
+	cout<<"SVM的分类阈值:"<<argv[5]<<"(默认为-2.5)"<<endl;
 
 	CvSize minsize = cvSize(facesize,facesize);
 
@@ -71,15 +66,12 @@ int main(int argc, const char** argv)
 
 	resize(img, img, facewh);//规范化人脸大小
 
-	//生成镜像图片
-	//Mat Mirrorimg;
-	//hMirrorTrans(img, Mirrorimg);
 
 	vector<float> featureVec0;
 	vector<float> histfeatureVec0;
 	Mat dst;
 
-	equalizeHist(img, img);//直方图均衡化
+	//equalizeHist(img, img);//直方图均衡化
 
 	const char *pstrWindowsTitle = "objface";  
     cvNamedWindow(pstrWindowsTitle, CV_WINDOW_AUTOSIZE);  

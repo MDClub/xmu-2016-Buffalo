@@ -11,36 +11,35 @@ featureVec：输出特征map分块统计的直方图特征向量
 void gray01(Mat &gray,vector<float> &featureVec)
 {
 	int channels[] = {0};//第一个通道
-	int histSize[] = {8};//直方图分为几份
-	float granges [] = {0.0,7.0};//灰度图取值范围
+	int histSize[] = {16};//直方图分为几份
+	float granges [] = {0.0,15.0};//灰度图取值范围
 	const float* ranges[] = {granges};
 
-	int blocksize = 10;//分块大小
+	int blocksize = 5;//分块大小
 
 	double minval=0;
 	double maxval=0;
 
 	float temp=0.0;
 
-	for(int i=0;i<gray.rows;)
+	for(int i=0;i<gray.rows-blocksize+1;)
 	{
-		for(int j=0;j<gray.cols;)
+		for(int j=0;j<gray.cols-blocksize+1;)
 		{
 			//对每个块内的每一列求直方图并拉成一个列向量
-			Rect roi(j, i, 1, blocksize);
+			Rect roi(j, i, blocksize, blocksize);
 			Mat roi_img = gray(roi);
 			Mat hist;//直方图
 
 			calcHist(&roi_img,1,channels,Mat(),hist,1,histSize,ranges,true,false);
 
-			//minMaxLoc(hist, 0, &maxval, 0, 0);//求最大值
-
+	
 			for(int k=0;k<hist.rows;k++)
 			{	
 				temp = hist.at<float>(k,0);
 				featureVec.push_back(temp);
 			}
-			j+=1;
+			j+=blocksize;
 		}
 		i+=blocksize;
 	}

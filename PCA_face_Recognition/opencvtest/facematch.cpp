@@ -6,25 +6,32 @@ using namespace cv;
 CvSVM svm;//新建一个SVM用作人脸相似性分类
 
 	//PCAnet训练出来的第一层的第一个卷积核
-	Mat kernel1 = (Mat_<float>(5,5)<< -0.2498,   -0.2745,   -0.2828,   -0.2745,   -0.2498,
+	Mat kernel1 = (Mat_<float>(1,25)<< -0.2498,   -0.2745,   -0.2828,   -0.2745,   -0.2498,
    -0.1580,   -0.1748,   -0.1804,   -0.1748,   -0.1580,
    -0.0004,   -0.0006,   -0.0006,   -0.0006,   -0.0004,
     0.1577,   0.1744,    0.1799,    0.1744,    0.1577,
     0.2509,    0.2754,    0.2835,    0.2754,    0.2509);
 
 	//PCAnet训练出来的第一层的第二个卷积核
-	Mat kernel2 = (Mat_<float>(5,5)<<-0.2534,   -0.1515,   -0.0000,    0.1515,    0.2534,
+	Mat kernel2 = (Mat_<float>(1,25)<<-0.2534,   -0.1515,   -0.0000,    0.1515,    0.2534,
    -0.2787,   -0.1686,   -0.0000,    0.1686,    0.2787,
    -0.2872,  -0.1745,   -0.0000,    0.1745,    0.2872,
    -0.2789,   -0.1693,    0.0000,    0.1693,    0.2789,
    -0.2531,   -0.1524,    0.0000,    0.1524,    0.2531);
 
 	//PCAnet训练出来的第一层的第三个卷积核
-	Mat kernel3 = (Mat_<float>(5,5)<< 0.2537,    0.2126,    0.1865,    0.2126,    0.2537,
+	Mat kernel3 = (Mat_<float>(1,25)<< 0.2537,    0.2126,    0.1865,    0.2126,    0.2537,
    -0.0237,   -0.1204,   -0.1674,   -0.1204,   -0.0237,
    -0.1742,   -0.3031,   -0.3617,   -0.3031,   -0.1742,
    -0.0254,   -0.1221,   -0.1693,   -0.1221,   -0.0254,
     0.2532,    0.2124,    0.1859,    0.2124,    0.2532);
+
+	//PCAnet训练出来的第一层的第三个卷积核
+	Mat kernel4 = (Mat_<float>(1,25)<<0.3344,    0.2317,    0.0000,   -0.2317,   -0.3344,
+    0.2361,    0.1657,    0.0000,   -0.1657,   -0.2361,
+    0.0021,    0.0025,    0.0000,   -0.0025,   -0.0021,
+   -0.2353,   -0.1636,    0.0000,    0.1636,    0.2353,
+   -0.3385,   -0.2335,    0.0000,    0.2335,    0.3385);
 
 
 
@@ -47,7 +54,7 @@ float Chisquare(vector<float> featureVec0,vector<float> featureVec1,vector<float
 		//针对10*10的块
 		temp = featureVec0[j]-featureVec1[j];
 		sum += temp*temp/(featureVec0[j]+featureVec1[j]+1);
-		ChisquareVec.push_back(temp*temp/(featureVec0[j]+featureVec1[j]+1));
+		ChisquareVec.push_back(temp*temp/(featureVec0[j]+featureVec1[j]+0.01));
 	}
 
 	return sum;
@@ -65,7 +72,7 @@ objbox：函数返回的是匹配上的人脸目标矩形框信息
 */
 vector<cv::Rect> boxmatch(IplImage *pSrcImage,Size facewh,vector<Rect> facebox,vector<float> featureVec0,float &tempchi)
 {
-	svm.load("model\\faceSVMclass3.xml", 0);//人脸匹配model
+	svm.load("model\\faceSVMclasslast.xml", 0);//人脸匹配model
 
 	int n = facebox.size();
 	float tempro = 0;
@@ -97,7 +104,7 @@ vector<cv::Rect> boxmatch(IplImage *pSrcImage,Size facewh,vector<Rect> facebox,v
 		if(subimg.channels() > 1)
 			cvtColor(subimg,subimg,CV_BGR2GRAY);
 
-		equalizeHist(subimg, subimg);//直方图均衡化
+		//equalizeHist(subimg, subimg);//直方图均衡化
 		#ifdef DEBUG
 		imshow("subimg",subimg);
 		#endif
