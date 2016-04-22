@@ -112,11 +112,11 @@ int main(int argc, const char** argv)
 
 			for(int idx = 0;idx<objbox.size();idx++)
 			{
-				cvRectangle(curframe, cvPoint(facebox[idx].x,facebox[idx].y),
-				cvPoint(facebox[idx].x+facebox[idx].width,facebox[idx].y+facebox[idx].height),CV_RGB(255,20,0), 2);//在图片上绘制矩形框
+				cvRectangle(curframe, cvPoint(objbox[idx].x,objbox[idx].y),
+				cvPoint(objbox[idx].x+objbox[idx].width,objbox[idx].y+objbox[idx].height),CV_RGB(255,20,0), 2);//在图片上绘制矩形框
 				sprintf(text,"%s:%.3f",objname,-tempchi);//显示目标的名字及置信度
 				cvInitFont(&font,CV_FONT_HERSHEY_COMPLEX, 0.8, 0.8, 0, 1, 8); 
-				cvPutText(curframe,text, cvPoint(facebox[idx].x,facebox[idx].y), &font, CV_RGB(0, 255, 255));//标注目标
+				cvPutText(curframe,text, cvPoint(objbox[idx].x,objbox[idx].y), &font, CV_RGB(0, 255, 255));//标注目标
 				cvShowImage("FaceDetect Demo", curframe);
 			}
 
